@@ -1,0 +1,20 @@
+.header {
+    background-color: rgb(11, 17, 134);
+}
+
+.container {
+    width: 90vw;
+    height: 60vh;
+    background-color: rgb(214, 200, 216);
+}
+
+.block {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(102, 194, 222);
+    display: inline-block;
+}
+
+.snake {
+    background-color: rgb(191, 11, 113);
+}
