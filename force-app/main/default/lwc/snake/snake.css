@@ -11,10 +11,14 @@
 .block {
     width: 40px;
     height: 40px;
-    background-color: rgb(102, 194, 222);
+    background-color: rgb(182, 224, 237);
     display: inline-block;
 }
 
 .snake {
-    background-color: rgb(191, 11, 113);
+    background-color: chartreuse;
+}
+
+.food {
+    background-color: rgb(64, 64, 220);
 }

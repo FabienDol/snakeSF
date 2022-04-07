@@ -6,17 +6,9 @@
 
         <template for:each={blocks} for:item="block">
 
-            <template if:true={block.snake}>
-                <div class="block snake" key={block.id}>
-                    {block.id}
-                </div>
-            </template>
-
-            <template if:false={block.snake}>
-                <div class="block" key={block.id}>
-                    {block.id}
-                </div>
-            </template>
+            <div class={block.class} data-reference={block.id} key={block.id}>
+                {block.id}
+            </div>
 
         </template>
     </div>

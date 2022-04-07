@@ -13,6 +13,9 @@ export default class Snake extends LightningElement {
     height;
     xMax;
     yMax;
+    xFood;
+    yFood;
+    snake = [];
 
     displayBlocks() {
         console.log("displayBlocks appelé");
@@ -28,7 +31,8 @@ export default class Snake extends LightningElement {
 
         for (let i = 0; i < this.yMax; i++) {
             for (let j = 0; j < this.xMax; j++) {
-                let obj = {id: `${j}:${i}`, snake : false};
+
+                let obj = {id: `${j}:${i}`, class : "block"};
                 tempBlocks.push(obj);
             }
             
@@ -46,11 +50,11 @@ export default class Snake extends LightningElement {
         let currentPos = this.blocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`
         );
-        this.blocks[currentPos].snake = true;
-        //this.blocks[newPosIndex].class = "snake";
-        console.log("bool snake du block d'id " + currentPos + " (xHead, yHead : " + this.xHead + ", " + this.yHead + ") : " + this.blocks[currentPos].snake);
+
+        this.blocks[currentPos].class = "block snake";
 
         setInterval(() => this.moveSnake(), 500);
+        setInterval(() => this.eat(), 500);
 
     }
 
@@ -58,7 +62,8 @@ export default class Snake extends LightningElement {
         let currentPos = this.blocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`
         );
-        this.blocks[currentPos].snake = false;
+
+        this.blocks[currentPos].class = "block";
 
         console.log("avant : " + this.xHead + ", " + this.yHead);
 
@@ -79,12 +84,12 @@ export default class Snake extends LightningElement {
         let nextPos = this.blocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`
         );
-        this.blocks[nextPos].snake = true;
+
+        this.blocks[nextPos].class = "block snake";
+
 
         console.log("après : " + this.xHead + ", " + this.yHead);
         console.log("moveSnake appelé");
-        console.log("valeur classe snake block " + this.xHead + ", " + this.yHead + " : " + this.blocks[nextPos].snake);
-
 
     }
 
@@ -114,11 +119,33 @@ export default class Snake extends LightningElement {
         });
     }
 
+    addFood() {
+        this.xFood = Math.floor(Math.random() * this.xMax);
+        this.yFood = Math.floor(Math.random() * this.yMax);
+
+        let currentFoodPos = this.blocks.findIndex(
+            (x) => x.id === `${this.xFood}:${this.yFood}`
+        );
+
+        this.blocks[currentFoodPos].class = 'block food';
+
+    }
+
+    eat() {
+        console.log(this.xFood + " " + this.xHead + "   ;   " + this.yFood + " " + this.yHead);
+
+        if (this.xFood == this.xHead && this.yFood == this.yHead) {
+            console.log("\nbien mangé\n\n");
+            this.addFood();
+        }
+    }
+
     renderedCallback() {
         if (!this.rendered) {
             this.rendered = true;
             this.displayBlocks();
             this.init();
+            this.addFood();
             this.controls();
         }
     }
