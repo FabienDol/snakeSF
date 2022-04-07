@@ -9,22 +9,25 @@ export default class Snake extends LightningElement {
     yHead;
     xSpeed;
     ySpeed;
+    width;
+    height;
+    xMax;
+    yMax;
 
     displayBlocks() {
         console.log("displayBlocks appelé");
 
-        // todo : refacto (duplicated)
-        let width = this.template.querySelector(".container").clientWidth;
-        let height = this.template.querySelector(".container").clientHeight;
-        let xMax = Math.floor(width/this.blockSize);
-        let yMax = Math.floor(height/this.blockSize);
+        this.width = this.template.querySelector(".container").clientWidth;
+        this.height = this.template.querySelector(".container").clientHeight;
+        this.xMax = Math.floor(this.width/this.blockSize);
+        this.yMax = Math.floor(this.height/this.blockSize);
 
-        console.log("w : " + width + " ; h : " + height + " xMax : " + xMax + " ; yMax :" + yMax);
+        console.log("w : " + this.width + " ; h : " + this.height + " xMax : " + this.xMax + " ; yMax :" + this.yMax);
 
         let tempBlocks = [];
 
-        for (let i = 0; i < yMax; i++) {
-            for (let j = 0; j < xMax; j++) {
+        for (let i = 0; i < this.yMax; i++) {
+            for (let j = 0; j < this.xMax; j++) {
                 let obj = {id: `${j}:${i}`, snake : false};
                 tempBlocks.push(obj);
             }
@@ -36,6 +39,10 @@ export default class Snake extends LightningElement {
     init() {
         this.xHead = 0;
         this.yHead = 0;
+
+        this.xSpeed = 1;
+        this.ySpeed = 0;
+
         let currentPos = this.blocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`
         );
@@ -55,16 +62,18 @@ export default class Snake extends LightningElement {
 
         console.log("avant : " + this.xHead + ", " + this.yHead);
 
-        this.xHead++;
+        this.xHead += this.xSpeed;
+        this.yHead += this.ySpeed;
 
-        // todo : refacto (duplicated)
-        let width = this.template.querySelector(".container").clientWidth;
-        let height = this.template.querySelector(".container").clientHeight;
-        let xMax = Math.floor(width/this.blockSize);
-        let yMax = Math.floor(height/this.blockSize);
-
-        if (this.xHead >= xMax) {
+        // loop when out of map
+        if (this.xHead >= this.xMax) {
             this.xHead = 0;
+        } else if (this.yHead >= this.yMax) {
+            this.yHead = 0;
+        } else if (this.xHead < 0) {
+            this.xHead = this.xMax -1;
+        } else if (this.yHead < 0) {
+            this.yHead = this.yMax -1;
         }
 
         let nextPos = this.blocks.findIndex(
@@ -110,6 +119,7 @@ export default class Snake extends LightningElement {
             this.rendered = true;
             this.displayBlocks();
             this.init();
+            this.controls();
         }
     }
 
