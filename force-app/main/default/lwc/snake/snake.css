@@ -1,19 +1,21 @@
 .header {
     background-color: goldenrod;
     font-size: 1rem;
+    max-width: 1200px;
+    width: 100%;
 }
 
 .container {
     max-width: 1200px;
-    width: 80vw;
+    width: 100%;
     height: 60vh;
-    background-color: rgb(47, 178, 234);
+    background-color: rgb(0, 86, 198);
 }
 
 .block {
     width: 20px;
     height: 20px;
-    background-color: rgb(47, 178, 234);
+    background-color: rgb(0, 86, 198);
     display: inline-block;
 }
 
