@@ -1,18 +1,21 @@
 .header {
-    background-color: rgb(11, 17, 134);
+    background-color: gold;
+    font-size: 1rem;
 }
 
 .container {
-    width: 90vw;
+    width: 80vw;
     height: 60vh;
-    background-color: rgb(214, 200, 216);
+    background-color: rgb(33, 55, 221);
 }
 
 .block {
-    width: 40px;
-    height: 40px;
-    background-color: rgb(182, 224, 237);
+    width: 20px;
+    height: 20px;
+    background-color: rgb(226, 39, 232);
     display: inline-block;
+    margin: 0px;
+    padding: 0px;
 }
 
 .snake {
