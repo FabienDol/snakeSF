@@ -2,6 +2,8 @@ import { LightningElement, track } from 'lwc';
 
 export default class Snake extends LightningElement {
 
+    width;
+    height;
     blockSize = 20;
     rendered = false;
     @track blocks = [];
@@ -9,7 +11,7 @@ export default class Snake extends LightningElement {
     yHead;
     xSpeed;
     ySpeed;
-    totalSpeed;
+    speed;
     xMax;
     yMax;
     xFood;
@@ -17,14 +19,16 @@ export default class Snake extends LightningElement {
     justEat;
     tailX = [];
     tailY = [];
+    callMove;
+    callEat;
+    score;
 
     displayBlocks() {
-        console.log("displayBlocks appelé");
 
-        const width = this.template.querySelector(".container").clientWidth;
-        const height = this.template.querySelector(".container").clientHeight;
-        this.xMax = Math.floor(width/this.blockSize);
-        this.yMax = Math.floor(height/this.blockSize);
+        this.width = this.template.querySelector(".container").clientWidth;
+        this.height = this.template.querySelector(".container").clientHeight;
+        this.xMax = Math.floor(this.width/this.blockSize);
+        this.yMax = Math.floor(this.height/this.blockSize);
 
         console.log("w : " + this.width + " ; h : " + this.height + " xMax : " + this.xMax + " ; yMax :" + this.yMax);
 
@@ -45,61 +49,62 @@ export default class Snake extends LightningElement {
         this.xHead = 0;
         this.yHead = 0;
 
-        this.totalSpeed = 1;
+        this.speed = 1;
 
         this.xSpeed = 1;
         this.ySpeed = 0;
+
+        this.score = 0;
 
         let currentPos = this.blocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`);
         this.blocks[currentPos].class = "block snake";
 
-        setInterval(() => this.moveSnake(), 200);
-        setInterval(() => this.eat(), 200);
+        this.callMove = setInterval(() => this.moveSnake(), 300 / this.speed);
+        this.callEat = setInterval(() => this.eat(), 300 / this.speed);
+
+    }
+
+    setSpeed() {
+        clearInterval(this.callMove);
+        clearInterval(this.callEat);
+        this.callMove = setInterval(() => this.moveSnake(), 300 / this.speed);
+        this.callEat = setInterval(() => this.eat(), 300 / this.speed);
     }
 
     moveSnake() {
         
-        // récupère la position de la tête
+        // get head's position
         this.currentPos = this.blocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`
         );
 
         if (!this.justEat) {
-            // change la classe de la position précédente de la tête en .block
+            // change previous head's position's class to .block
             if (this.tailX.length == 0) {
                 this.blocks[this.currentPos].class = "block";
             }
 
-            // push position de la tete avant màj
+            // add head's position before update
             this.tailX.push(`${this.xHead}`);
             this.tailY.push(`${this.yHead}`);
 
-            // ajoute speed à la position de la tête
+            // add speed to get new head's position
             this.xHead += this.xSpeed;
             this.yHead += this.ySpeed;
 
-
             //touched the wall game over
             if ((this.xHead >= this.xMax) || (this.yHead >= this.yMax) || (this.xHead < 0) || (this.yHead < 0)) {
-                console.log("game over");
-                this.xHead = 0;
-                this.yHead = 0;
-                this.xSpeed = 1;
-                this.ySpeed = 0;
-                this.tailX = [];
-                this.tailY = [];
-                this.displayBlocks();
-                this.addFood();
+                this.gameOver();
             }
 
-            // change la classe de la nouvelle position de la tête en .block snake
+            // change updated head's position class to .block snake
             let nextPos = this.blocks.findIndex(
                 (x) => x.id === `${this.xHead}:${this.yHead}`
             );
             this.blocks[nextPos].class = "block snake";
 
-            // supprime le dernier élément de tail[] et change sa classe en .block
+            // delete last element in tail[] and change his class to .block
             console.log("this.tailX.length : " + this.tailX.length)
             if (this.tailX.length != 0) {
                 let tX = this.tailX.shift();
@@ -113,7 +118,7 @@ export default class Snake extends LightningElement {
 
             if (this.tailX.length != 0) {
 
-                // pour tous les éléments de tail[], on change la classe à .block snake dans blocks[]
+                // for each element in tail[], change his class to .block snake (in blocks[])
                 for (let i = 0; i < this.tailX.length; i++) {
                 let tailChange = this.blocks.findIndex(
                     (x) => x.id === `${this.tailX[i]}:${this.tailY[i]}`);
@@ -131,35 +136,38 @@ export default class Snake extends LightningElement {
             this.tailX.push(`${this.xHead}`);
             this.tailY.push(`${this.yHead}`);
 
-            // ajoute speed à la position de la tête
             this.xHead += this.xSpeed;
             this.yHead += this.ySpeed;
 
-            //touched the wall game over
             if ((this.xHead >= this.xMax) || (this.yHead >= this.yMax) || (this.xHead < 0) || (this.yHead < 0)) {
-                console.log("game over");
-                this.xHead = 0;
-                this.yHead = 0;
-                this.xSpeed = 1;
-                this.ySpeed = 0;
-                this.tailX = [];
-                this.tailY = [];
-                this.displayBlocks();
-                this.addFood();
+                this.gameOver();
             }
 
-            // change la classe de la nouvelle position de la tête en .block snake
             let nextPos = this.blocks.findIndex(
                 (x) => x.id === `${this.xHead}:${this.yHead}`);
             this.blocks[nextPos].class = "block snake";
 
-            // pour tous les éléments de tail[], on change la classe à .block snake dans blocks[]
             for (let i = 0; i < this.tailX.length; i++) {
                 let tailChange = this.blocks.findIndex(
                     (x) => x.id === `${this.tailX[i]}:${this.tailY[i]}`);
                 this.blocks[tailChange].class = "block snake";
             }
         }
+    }
+
+    gameOver() {
+        console.log("game over");
+        this.xHead = 0;
+        this.yHead = 0;
+        this.xSpeed = 1;
+        this.ySpeed = 0;
+        this.speed = 1;
+        this.setSpeed();
+        this.score = 0;
+        this.tailX = [];
+        this.tailY = [];
+        this.displayBlocks();
+        this.addFood();
     }
 
     controls() {
@@ -202,11 +210,18 @@ export default class Snake extends LightningElement {
             console.log("\nbien mangé\n\n");
             this.addFood();
             this.justEat = true;
+            this.speed += 0.1;
+            this.setSpeed();
+            this.score += 1;
         }
     }
 
-    get displaySpeed() {
-        return this.speed;
+    get speed() {
+        return (+this.speed.toFixed(1));
+    }
+
+    get score() {
+        return this.score;
     }
 
     renderedCallback() {
@@ -219,16 +234,8 @@ export default class Snake extends LightningElement {
 
             window.addEventListener('resize', () => {
                 console.log("window resized");
-                this.xHead = 0;
-                this.yHead = 0;
-                this.xSpeed = 1;
-                this.ySpeed = 0;
-                this.tailX = [];
-                this.tailY = [];
-                this.displayBlocks();
-                this.addFood();
+                this.gameOver();
             });
         }
     }
-
 }

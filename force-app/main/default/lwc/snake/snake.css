@@ -1,27 +1,26 @@
 .header {
-    background-color: gold;
+    background-color: goldenrod;
     font-size: 1rem;
 }
 
 .container {
+    max-width: 1200px;
     width: 80vw;
     height: 60vh;
-    background-color: rgb(33, 55, 221);
+    background-color: rgb(47, 178, 234);
 }
 
 .block {
     width: 20px;
     height: 20px;
-    background-color: rgb(226, 39, 232);
+    background-color: rgb(47, 178, 234);
     display: inline-block;
-    margin: 0px;
-    padding: 0px;
 }
 
 .snake {
-    background-color: chartreuse;
+    background-color: goldenrod;
 }
 
 .food {
-    background-color: rgb(64, 64, 220);
+    background-color: rgb(0, 0, 0);
 }
