@@ -129,7 +129,6 @@ export default class Snake extends LightningElement {
             }
 
 
-
         } else { // (justEat)
             this.justEat = false;
 
@@ -192,6 +191,29 @@ export default class Snake extends LightningElement {
                     break;
                 default:
                     break;
+            }
+        });
+
+        window.addEventListener("touchstart", (e) => {
+            if(e.touches) {
+                e.preventDefault();
+                if (this.ySpeed == -1) {
+                    this.xSpeed = 1;
+                    this.ySpeed = 0;
+                    console.log("was up ");
+                } else if (this.ySpeed == 1) {
+                    this.xSpeed = -1;
+                    this.ySpeed = 0;
+                    console.log("was down ");
+                } else if (this.xSpeed == -1) {
+                    this.xSpeed = 0;
+                    this.ySpeed = -1;
+                    console.log("was left ");
+                } else {
+                    this.xSpeed = 0;
+                    this.ySpeed = 1;
+                    console.log("was right ::: ");
+                }
             }
         });
     }

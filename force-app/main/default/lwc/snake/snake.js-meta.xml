@@ -10,6 +10,7 @@
         <targetConfig targets="lightning__AppPage">
             <supportedFormFactors>
                 <supportedFormFactor type="Small" />
+                <supportedFormFactor type="Large" />
             </supportedFormFactors>
         </targetConfig>
         <targetConfig targets="lightning__HomePage">
